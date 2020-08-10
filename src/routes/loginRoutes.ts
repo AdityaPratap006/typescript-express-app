@@ -27,13 +27,35 @@ router.get('/login', (req: Request, res: Response) => {
 router.post('/login', (req: RequestWithBody, res: Response) => {
     const { email, password } = req.body;
 
-    if (email) {
-        res.send({
-            email: email.toUpperCase(),
-            password,
-        });
+
+    if (email && password && email === 'hi@hi.com' && password === '123') {
+        // mark this person as logged in
+        req.session = {
+            loggedIn: true,
+        }
+
+        res.redirect('/');
+        // redirect them to the root route
     } else {
-        res.status(422).send(`You must provide an email`);
+        res.status(422).send('Invalid email or password');
+    }
+});
+
+router.get('/', (req: RequestWithBody, res: Response) => {
+    if (req.session && req.session.loggedIn) {
+        res.send(`
+            <div>
+                <div>You are logged in!</div>
+                <a href="/logout">LOGOUT</a>
+            </div>
+        `);
+    } else {
+        res.send(`
+            <div>
+                <div>You are not logged in.</div>
+                <a href="/login">LOGIN</a>
+            </div>
+        `);
     }
 });
 
