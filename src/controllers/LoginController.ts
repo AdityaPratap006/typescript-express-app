@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { get, controller, bodyValidator, post } from './decorators';
 
 // interface RequestWithBody extends Request {
@@ -43,6 +43,12 @@ class LoginController {
         } else {
             res.status(422).send('Invalid email or password');
         }
+    }
+
+    @get('/logout')
+    getLogout(req: Request, res: Response) {
+        req.session = null;
+        res.redirect('/');
     }
 
 }
